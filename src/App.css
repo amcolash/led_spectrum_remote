@@ -1,3 +1,13 @@
 body {
   background-color: #333;
+  color: white;
+}
+
+button,
+select {
+  margin: 8px;
+  padding: 6px;
+  background-color: #fafafa;
+  border: none;
+  min-width: 80px;
 }

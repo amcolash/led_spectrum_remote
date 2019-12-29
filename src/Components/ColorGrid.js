@@ -51,7 +51,7 @@ export class ColorGrid extends Component {
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', paddingTop: margin * 2 }}>
-          <label style={{ color: 'white', paddingRight: 5 }}>Saturation</label>
+          <label style={{ paddingRight: 5 }}>Saturation</label>
           <input
             type="range"
             min="0"

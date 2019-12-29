@@ -26,7 +26,10 @@ export class Text extends Component {
       <div
         className="text"
         style={{ color: this.props.color, fontSize: 16, width: '100%', outline: this.props.selected ? '1px solid white' : undefined }}
-        onClick={() => this.props.onClick()}
+        onClick={e => {
+          this.props.onClick(e);
+          e.stopPropagation();
+        }}
       >
         <div style={{ display: 'flex', alignItems: 'flex-begin', justifyContent: 'space-between', width: '100%' }}>
           <div style={{ fontSize: 32 }}>{this.state.time}</div>

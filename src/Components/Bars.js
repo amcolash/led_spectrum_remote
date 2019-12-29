@@ -27,21 +27,14 @@ export class Bars extends Component {
             outline: this.props.selected === i ? '1px solid white' : undefined
           }}
           key={i}
-          onClick={() => this.props.onClick(i)}
+          onClick={e => {
+            this.props.onClick(i);
+            e.stopPropagation();
+          }}
         ></div>
       );
     }
 
-    return (
-      <div
-        className="bars"
-        style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'center' }}
-        onClick={e => {
-          if (e.target.className === 'bars') this.props.onClick(-1);
-        }}
-      >
-        {bars}
-      </div>
-    );
+    return <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'center' }}>{bars}</div>;
   }
 }
