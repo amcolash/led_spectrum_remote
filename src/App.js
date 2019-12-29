@@ -1,10 +1,13 @@
 import React from 'react';
 import { Component } from 'react';
+import axios from 'axios';
 import { rgbFromHsv } from './Util/hsv';
 import './App.css';
 import { Bars } from './Components/Bars';
 import { ColorGrid } from './Components/ColorGrid';
 import { Text } from './Components/Text';
+
+const serverUrl = 'home.amcolash.com/spectrum';
 
 export class App extends Component {
   constructor(props) {
@@ -12,7 +15,15 @@ export class App extends Component {
 
     const defaultColors = this.getDefaultColors();
 
-    this.state = { barColors: defaultColors.barColors, textColor: defaultColors.textColor, selected: -1, presets: [] };
+    this.state = {
+      barColors: defaultColors.barColors,
+      barHues: defaultColors.barHues,
+      barSaturation: defaultColors.barSaturation,
+      textColor: defaultColors.textColor,
+      textHue: defaultColors.textHue,
+      selected: -1,
+      presets: []
+    };
   }
 
   componentDidMount() {
@@ -21,24 +32,27 @@ export class App extends Component {
 
   getDefaultColors() {
     const barColors = [];
+    const barHues = [];
+    const barSaturation = [];
     for (let i = 0; i < 16; i++) {
       const h = Math.floor((i / 16) * 255);
       barColors.push(rgbFromHsv(h, 255, 255));
+      barHues.push(h);
+      barSaturation.push(255);
     }
-    const textColor = rgbFromHsv(82, 255, 255);
+    const textHue = 82;
+    const textColor = rgbFromHsv(textHue, 255, 255);
 
-    return { barColors, textColor };
+    return { barColors, barHues, barSaturation, textColor, textHue, preset: 'default' };
   }
 
-  randomColors() {
-    const barColors = [];
+  // not the most efficient (17 state updates, but that isn't a big deal for this application)
+  async randomColors() {
     for (let i = 0; i < 16; i++) {
       const h = Math.floor(Math.random() * 255);
-      barColors.push(rgbFromHsv(h, 255, 255));
+      await this.updateBarColor(h, 255, i);
     }
-    const textColor = rgbFromHsv(Math.floor(Math.random() * 255), 255, 255);
-
-    return { barColors, textColor };
+    await this.updateTextColor(Math.floor(Math.random() * 255));
   }
 
   saveColors(promptName) {
@@ -47,26 +61,30 @@ export class App extends Component {
     else presets = {};
 
     const name = promptName ? prompt('Preset Name?', 'default') : 'default';
-    if (name) presets[name] = { barColors: this.state.barColors, textColor: this.state.textColor };
-    localStorage.setItem('presets', JSON.stringify(presets));
+    if (name) {
+      presets[name] = { barHues: this.state.barHues, barSaturation: this.state.barSaturation, textHue: this.state.textHue };
+      localStorage.setItem('presets', JSON.stringify(presets));
 
-    this.setState({ presets: Object.keys(presets) });
+      this.setState({ presets: Object.keys(presets), preset: name });
+    }
   }
 
-  loadColors(name) {
+  async loadColors(name) {
     let presets = localStorage.getItem('presets');
     if (presets) {
       presets = JSON.parse(presets);
       if (presets[name]) {
         const preset = presets[name];
-        this.setState({ textColor: preset.textColor, barColors: preset.barColors });
+
+        for (let i = 0; i < 16; i++) {
+          await this.updateBarColor(preset.barHues[i], preset.barSaturation[i], i);
+        }
+
+        await this.updateTextColor(preset.textHue);
+
+        this.setState({ preset: name });
       }
     }
-  }
-
-  // This will forecefully apply all colors at once, instead of a per-item change (useful for presets)
-  applyColors() {
-    // Do the magic here
   }
 
   updateColor(h, s) {
@@ -75,14 +93,26 @@ export class App extends Component {
     else this.updateBarColor(h, s);
   }
 
-  updateTextColor(h) {
-    this.setState({ textColor: rgbFromHsv(h, 255, 255) });
+  async updateTextColor(h) {
+    return new Promise((resolve, reject) => {
+      this.setState({ textColor: rgbFromHsv(h, 255, 255), textHue: h }, () => resolve());
+    });
   }
 
-  updateBarColor(h, s) {
-    const updatedColors = [...this.state.barColors];
-    updatedColors[this.state.selected] = rgbFromHsv(h, s, 255);
-    this.setState({ barColors: updatedColors });
+  async updateBarColor(h, s, i) {
+    return new Promise((resolve, reject) => {
+      let index = i;
+      if (index === undefined) index = this.state.selected;
+
+      const updatedColors = [...this.state.barColors];
+      const updatedHues = [...this.state.barHues];
+      const updatedSaturation = [...this.state.barSaturation];
+      updatedColors[index] = rgbFromHsv(h, s, 255);
+      updatedHues[index] = h;
+      updatedSaturation[index] = s;
+
+      this.setState({ barColors: updatedColors, barHues: updatedHues, barSaturation: updatedSaturation }, () => resolve());
+    });
   }
 
   render() {
@@ -132,7 +162,7 @@ export class App extends Component {
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: 20 }}>
           <div>
             <label>Presets</label>
-            <select onChange={e => this.loadColors(e.target.value)}>
+            <select onChange={e => this.loadColors(e.target.value)} value={this.state.preset}>
               {this.state.presets.map(p => (
                 <option value={p} key={p}>
                   {p}
@@ -140,10 +170,9 @@ export class App extends Component {
               ))}
             </select>
             <button onClick={() => this.saveColors(true)}>Save</button>
-            <button onClick={() => this.setState({ ...this.applyColors() })}>Apply</button>
           </div>
           <div>
-            <button onClick={() => this.setState({ ...this.randomColors() })}>Random</button>
+            <button onClick={() => this.randomColors()}>Random</button>
             <button onClick={() => this.setState({ ...this.getDefaultColors() })}>Reset</button>
           </div>
         </div>
