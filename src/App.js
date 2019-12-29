@@ -1,6 +1,6 @@
-import React from "react";
-import "./App.css";
-import { ColorGrid } from "./Components/ColorGrid";
+import React from 'react';
+import './App.css';
+import { ColorGrid } from './Components/ColorGrid';
 
 function App() {
   return (

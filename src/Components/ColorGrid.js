@@ -1,14 +1,16 @@
-import React from "react";
-import { Component } from "react";
+import React from 'react';
+import { Component } from 'react';
 
 export class ColorGrid extends Component {
   render() {
-    const container = <div style={{ backgroundColor: "white" }}></div>;
+    const items = [];
 
-    container.push(<div>A</div>);
-    container.push(<div>B</div>);
-    container.push(<div>C</div>);
+    for (var i = 0; i < 64; i++) {
+      items.push(<div>A</div>);
+    }
 
-    return container;
+    return (
+      <div style={{ backgroundColor: 'white', display: 'flex' }}>{items}</div>
+    );
   }
 }
