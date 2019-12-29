@@ -39,6 +39,11 @@ export class App extends Component {
   render() {
     const { barColors, selected, textColor } = this.state;
 
+    let selectedText = 'Selected: ';
+    if (selected === -1) selectedText += 'Nothing';
+    else if (selected === -2) selectedText += 'Text';
+    else selectedText += 'Bar ' + selected;
+
     return (
       <div
         className="app"
@@ -48,13 +53,14 @@ export class App extends Component {
         }}
       >
         <div
+          className="display"
           style={{
             width: '22em',
             height: '12.3em',
             border: '1px solid gray',
             display: 'flex',
             flexWrap: 'wrap',
-            marginBottom: 50,
+            marginBottom: 20,
             padding: 3,
             borderRadius: 3
           }}
@@ -63,7 +69,16 @@ export class App extends Component {
           <Bars barColors={barColors} selected={selected} onClick={i => this.setState({ selected: i })} />
         </div>
         <div style={{ flexBasis: '100%', width: 0 }}></div>
+
+        <div style={{ marginBottom: 30, color: 'white' }}>{selectedText}</div>
+        <div style={{ flexBasis: '100%', width: 0 }}></div>
+
         <ColorGrid dimensions={7} size={30} margin={2} onClick={(h, s) => this.updateColor(h, s)} />
+        <div style={{ flexBasis: '100%', width: 0 }}></div>
+
+        <div>SAVE</div>
+        <div>LIST</div>
+        <div>RESET</div>
       </div>
     );
   }

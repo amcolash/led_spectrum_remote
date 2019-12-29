@@ -25,11 +25,14 @@ export class Text extends Component {
     return (
       <div
         className="text"
-        style={{ color: this.props.color, fontSize: 32, outline: this.props.selected ? '1px solid white' : undefined }}
+        style={{ color: this.props.color, fontSize: 16, width: '100%', outline: this.props.selected ? '1px solid white' : undefined }}
         onClick={() => this.props.onClick()}
       >
-        <div>{this.state.time}</div>
-        <div style={{ fontSize: 16 }}>{this.state.date}</div>
+        <div style={{ display: 'flex', alignItems: 'flex-begin', justifyContent: 'space-between', width: '100%' }}>
+          <div style={{ fontSize: 32 }}>{this.state.time}</div>
+          <div style={{ paddingTop: 4 }}>Weather</div>
+        </div>
+        <div>{this.state.date}</div>
       </div>
     );
   }

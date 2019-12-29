@@ -32,6 +32,16 @@ export class Bars extends Component {
       );
     }
 
-    return <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'center' }}>{bars}</div>;
+    return (
+      <div
+        className="bars"
+        style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'center' }}
+        onClick={e => {
+          if (e.target.className === 'bars') this.props.onClick(-1);
+        }}
+      >
+        {bars}
+      </div>
+    );
   }
 }
