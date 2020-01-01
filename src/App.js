@@ -109,7 +109,7 @@ export class App extends Component {
     let selectedText = 'Selected: ';
     let hue = -1;
     let saturation = 255;
-    if (selected === -1) selectedText = '';
+    if (selected === -1) selectedText += 'Nothing';
     else if (selected === -2) {
       selectedText += 'Text';
       hue = textHue;
@@ -119,7 +119,7 @@ export class App extends Component {
       hue = barHues[selected];
       saturation = barSaturation[selected];
     }
-    hue = tmpHue !== null ? tmpHue : hue;
+    hue = tmpHue !== null && selected !== -1 ? tmpHue : hue;
 
     return (
       <div
@@ -133,7 +133,7 @@ export class App extends Component {
           alignItems: 'center',
           height: '100vh'
         }}
-        onClick={() => this.setState({ selected: -1 })}
+        onClick={() => this.setState({ selected: -1, tmpHue: null })}
       >
         {error ? (
           <h1>{error.message}</h1>
@@ -158,7 +158,7 @@ export class App extends Component {
                 textHue={textHue}
                 textSaturation={textSaturation}
                 selected={this.state.selected === -2}
-                onClick={() => this.setState({ selected: -2 })}
+                onClick={() => this.setState({ selected: -2, tmpHue: null })}
               />
               <div
                 style={{
@@ -172,11 +172,16 @@ export class App extends Component {
                 }}
               >
                 <Spinner visible={setting} />
-                <div style={{ opacity: !setting && selectedText ? 1 : 0, transition: 'all 0.35s', position: 'absolute' }}>
+                <div style={{ opacity: !setting && selected !== -1 ? 1 : 0, transition: 'all 0.35s', position: 'absolute' }}>
                   {selectedText}
                 </div>
               </div>
-              <Bars barHues={barHues} barSaturation={barSaturation} selected={selected} onClick={i => this.setState({ selected: i })} />
+              <Bars
+                barHues={barHues}
+                barSaturation={barSaturation}
+                selected={selected}
+                onClick={i => this.setState({ selected: i, tmpHue: null })}
+              />
             </div>
 
             <ColorGrid dimensions={7} size={32} margin={2} hue={hue} saturation={saturation} onClick={(h, s) => this.updateColor(h, s)} />
