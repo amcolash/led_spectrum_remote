@@ -4,6 +4,7 @@ import axios from 'axios';
 import './App.css';
 import { Bars } from './Components/Bars';
 import { ColorGrid } from './Components/ColorGrid';
+import { Spinner } from './Components/Spinner';
 import { Text } from './Components/Text';
 
 const serverUrl = 'https://home.amcolash.com:9000/spectrum/color';
@@ -18,6 +19,7 @@ export class App extends Component {
 
     this.state = {
       loading: true,
+      setting: false,
       error: null,
       barHues: [],
       barSaturation: [],
@@ -25,7 +27,8 @@ export class App extends Component {
       textSaturation: 0,
       selected: -1,
       presets,
-      preset: ''
+      preset: '',
+      tmpHue: null
     };
   }
 
@@ -36,7 +39,7 @@ export class App extends Component {
   getServerColors(preset) {
     axios
       .get(serverUrl)
-      .then(response => this.setState({ loading: false, setting: false, preset: preset || '', ...response.data }))
+      .then(response => this.setState({ loading: false, setting: false, tmpHue: null, preset: preset || '', ...response.data }))
       .catch(err => {
         console.error(err);
         this.setState({ error: err });
@@ -47,7 +50,7 @@ export class App extends Component {
     this.setState({ setting: true, preset: preset || '' }, () => {
       axios
         .post(serverUrl + '?data=' + JSON.stringify(data))
-        .then(response => this.setState({ loading: false, setting: false, preset: preset || '', ...response.data }))
+        .then(response => this.setState({ loading: false, setting: false, tmpHue: null, preset: preset || '', ...response.data }))
         .catch(err => {
           console.error(err);
         });
@@ -82,29 +85,31 @@ export class App extends Component {
   }
 
   updateColor(h, s) {
-    let { barHues, barSaturation, textHue, textSaturation, selected } = this.state;
+    this.setState({ tmpHue: h }, () => {
+      let { barHues, barSaturation, textHue, textSaturation, selected } = this.state;
 
-    if (this.state.selected === -1) return;
-    else if (this.state.selected === -2) {
-      textHue = h;
-      textSaturation = s;
-    } else {
-      barHues = [...this.state.barHues];
-      barSaturation = [...this.state.barSaturation];
-      barHues[selected] = h;
-      barSaturation[selected] = s;
-    }
+      if (this.state.selected === -1) return;
+      else if (this.state.selected === -2) {
+        textHue = h;
+        textSaturation = s;
+      } else {
+        barHues = [...this.state.barHues];
+        barSaturation = [...this.state.barSaturation];
+        barHues[selected] = h;
+        barSaturation[selected] = s;
+      }
 
-    this.setServerColors({ barHues, barSaturation, textHue, textSaturation });
+      this.setServerColors({ barHues, barSaturation, textHue, textSaturation });
+    });
   }
 
   render() {
-    const { barHues, barSaturation, error, loading, selected, setting, textHue, textSaturation } = this.state;
+    const { barHues, barSaturation, error, loading, selected, setting, tmpHue, textHue, textSaturation } = this.state;
 
     let selectedText = 'Selected: ';
     let hue = -1;
     let saturation = 255;
-    if (selected === -1) selectedText += 'Nothing';
+    if (selected === -1) selectedText = '';
     else if (selected === -2) {
       selectedText += 'Text';
       hue = textHue;
@@ -114,6 +119,7 @@ export class App extends Component {
       hue = barHues[selected];
       saturation = barSaturation[selected];
     }
+    hue = tmpHue !== null ? tmpHue : hue;
 
     return (
       <div
@@ -157,11 +163,13 @@ export class App extends Component {
               <div
                 style={{
                   width: '100%',
-                  textAlign: 'center',
-                  visibility: selectedText === 'Selected: Nothing' && !setting ? 'hidden' : undefined
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center'
                 }}
               >
-                {setting ? 'Setting Colors...' : selectedText}
+                <Spinner visible={setting} />
+                <div style={{ opacity: !setting && selectedText ? 1 : 0, marginTop: -32, transition: 'all 0.35s' }}>{selectedText}</div>
               </div>
               <Bars barHues={barHues} barSaturation={barSaturation} selected={selected} onClick={i => this.setState({ selected: i })} />
             </div>
@@ -186,7 +194,7 @@ export class App extends Component {
                     this.setState({ setting: true }, () =>
                       axios
                         .post(serverUrl + '?reset')
-                        .then(response => this.setState({ loading: false, setting: false, preset: '', ...response.data }))
+                        .then(response => this.setState({ loading: false, setting: false, tmpHue: null, preset: '', ...response.data }))
                     );
                   }}
                 >
