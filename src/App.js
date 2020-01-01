@@ -105,9 +105,18 @@ export class App extends Component {
     const { barHues, barSaturation, error, loading, selected, setting, textHue, textSaturation } = this.state;
 
     let selectedText = 'Selected: ';
+    let hue = -1;
+    let saturation = 255;
     if (selected === -1) selectedText += 'Nothing';
-    else if (selected === -2) selectedText += 'Text';
-    else selectedText += 'Bar ' + selected;
+    else if (selected === -2) {
+      selectedText += 'Text';
+      hue = textHue;
+      saturation = textSaturation;
+    } else {
+      selectedText += 'Bar ' + selected;
+      hue = barHues[selected];
+      saturation = barSaturation[selected];
+    }
 
     return (
       <div
@@ -160,7 +169,7 @@ export class App extends Component {
               <Bars barHues={barHues} barSaturation={barSaturation} selected={selected} onClick={i => this.setState({ selected: i })} />
             </div>
 
-            <ColorGrid dimensions={7} size={32} margin={2} onClick={(h, s) => this.updateColor(h, s)} />
+            <ColorGrid dimensions={7} size={32} margin={2} hue={hue} saturation={saturation} onClick={(h, s) => this.updateColor(h, s)} />
 
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: 20 }}>
               <div>

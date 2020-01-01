@@ -9,8 +9,14 @@ export class ColorGrid extends Component {
     this.state = { saturation: 255 };
   }
 
+  componentDidUpdate(prevProps) {
+    if (this.props.saturation !== prevProps.saturation) {
+      this.setState({ saturation: this.props.saturation });
+    }
+  }
+
   render() {
-    const { dimensions, size, margin } = this.props;
+    const { dimensions, size, margin, hue } = this.props;
     const sizeSquared = dimensions * dimensions;
     const width = (size + margin * 2) * dimensions;
 
@@ -33,7 +39,7 @@ export class ColorGrid extends Component {
             justifyContent: 'center',
             alignItems: 'center',
             transition: 'all 0.2s',
-            outline: '1px solid transparent'
+            outline: hue === h ? '1px solid white' : '1px solid transparent'
           }}
           key={i}
           onClick={e => {
@@ -68,7 +74,10 @@ export class ColorGrid extends Component {
             min="0"
             max="255"
             value={this.state.saturation}
-            onClick={e => e.stopPropagation()}
+            onClick={e => {
+              this.setState({ saturation: e.target.value });
+              e.stopPropagation();
+            }}
             onChange={e => {
               this.setState({ saturation: e.target.value });
               e.stopPropagation();
