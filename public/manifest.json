@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "LED Spectrum",
+  "name": "LED Spectrum Color Remote",
   "icons": [
     {
       "src": "favicon.ico",
