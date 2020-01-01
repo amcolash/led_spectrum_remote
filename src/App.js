@@ -160,7 +160,7 @@ export class App extends Component {
               <Bars barHues={barHues} barSaturation={barSaturation} selected={selected} onClick={i => this.setState({ selected: i })} />
             </div>
 
-            <ColorGrid dimensions={7} size={30} margin={2} onClick={(h, s) => this.updateColor(h, s)} />
+            <ColorGrid dimensions={7} size={32} margin={2} onClick={(h, s) => this.updateColor(h, s)} />
 
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: 20 }}>
               <div>

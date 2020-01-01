@@ -1,3 +1,7 @@
 .gridItem:hover {
-  outline: 1px solid white;
+  outline: 1px solid white !important;
+}
+
+.gridItem:hover div {
+  opacity: 1 !important;
 }

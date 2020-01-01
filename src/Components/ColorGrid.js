@@ -28,14 +28,21 @@ export class ColorGrid extends Component {
             height: size,
             backgroundColor: color,
             margin,
-            borderRadius: size / 12
+            borderRadius: size / 12,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            transition: 'all 0.2s',
+            outline: '1px solid transparent'
           }}
           key={i}
           onClick={e => {
             this.props.onClick(h, Number(this.state.saturation));
             e.stopPropagation();
           }}
-        ></div>
+        >
+          <div style={{ opacity: 0, transition: 'all 0.2s' }}>{h}</div>
+        </div>
       );
     }
 
@@ -47,7 +54,8 @@ export class ColorGrid extends Component {
             display: 'flex',
             flexWrap: 'wrap',
             width,
-            padding: margin
+            padding: margin,
+            textShadow: '1px 1px black'
           }}
         >
           {items}
