@@ -148,7 +148,7 @@ export class App extends Component {
                 height: '12.3em',
                 border: '1px solid gray',
                 display: 'flex',
-                flexWrap: 'wrap',
+                flexDirection: 'column',
                 padding: 3,
                 borderRadius: 3,
                 marginBottom: 20
@@ -162,14 +162,19 @@ export class App extends Component {
               />
               <div
                 style={{
-                  width: '100%',
                   display: 'flex',
                   flexDirection: 'column',
-                  alignItems: 'center'
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexGrow: 1,
+                  position: 'relative',
+                  paddingBottom: 10
                 }}
               >
                 <Spinner visible={setting} />
-                <div style={{ opacity: !setting && selectedText ? 1 : 0, marginTop: -32, transition: 'all 0.35s' }}>{selectedText}</div>
+                <div style={{ opacity: !setting && selectedText ? 1 : 0, transition: 'all 0.35s', position: 'absolute' }}>
+                  {selectedText}
+                </div>
               </div>
               <Bars barHues={barHues} barSaturation={barSaturation} selected={selected} onClick={i => this.setState({ selected: i })} />
             </div>
