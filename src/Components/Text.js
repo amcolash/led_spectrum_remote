@@ -1,6 +1,7 @@
 import React from 'react';
 import { Component } from 'react';
 import './Text.css';
+import { rgbFromHsv } from '../Util/hsv';
 
 export class Text extends Component {
   constructor(props) {
@@ -25,7 +26,12 @@ export class Text extends Component {
     return (
       <div
         className="text"
-        style={{ color: this.props.color, fontSize: 16, width: '100%', outline: this.props.selected ? '1px solid white' : undefined }}
+        style={{
+          color: rgbFromHsv(this.props.textHue, this.props.textSaturation, 255),
+          fontSize: 16,
+          width: '100%',
+          outline: this.props.selected ? '1px solid white' : undefined
+        }}
         onClick={e => {
           this.props.onClick(e);
           e.stopPropagation();

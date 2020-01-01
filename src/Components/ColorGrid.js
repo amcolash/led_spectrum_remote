@@ -31,7 +31,10 @@ export class ColorGrid extends Component {
             borderRadius: size / 12
           }}
           key={i}
-          onClick={() => this.props.onClick(h, Number(this.state.saturation))}
+          onClick={e => {
+            this.props.onClick(h, Number(this.state.saturation));
+            e.stopPropagation();
+          }}
         ></div>
       );
     }
@@ -57,7 +60,11 @@ export class ColorGrid extends Component {
             min="0"
             max="255"
             value={this.state.saturation}
-            onChange={e => this.setState({ saturation: e.target.value })}
+            onClick={e => e.stopPropagation()}
+            onChange={e => {
+              this.setState({ saturation: e.target.value });
+              e.stopPropagation();
+            }}
           />
         </div>
       </div>
