@@ -184,7 +184,7 @@ export class App extends Component {
                 <button onClick={() => this.saveColorPreset(true)}>Save</button>
                 <button
                   onClick={() => {
-                    this.setState({ setting: true }, () => axios.post(serverUrl + '?reset').then(this.getServerColors()));
+                    this.setState({ setting: true }, () => axios.post(serverUrl + '?reset').then(() => this.getServerColors()));
                   }}
                 >
                   Reset
