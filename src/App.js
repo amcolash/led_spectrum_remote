@@ -175,11 +175,13 @@ export class App extends Component {
               <div>
                 <label>Presets</label>
                 <select onChange={e => this.loadColorPreset(e.target.value)} value={this.state.preset}>
-                  {['', ...Object.keys(this.state.presets)].map(p => (
-                    <option value={p} key={p}>
-                      {p}
-                    </option>
-                  ))}
+                  {['', ...Object.keys(this.state.presets)]
+                    .sort((a, b) => a.localeCompare(b))
+                    .map(p => (
+                      <option value={p} key={p}>
+                        {p}
+                      </option>
+                    ))}
                 </select>
                 <button onClick={() => this.saveColorPreset(true)}>Save</button>
                 <button
