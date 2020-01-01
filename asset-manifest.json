@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/led_spectrum_remote/static/css/main.a304bbed.chunk.css",
-    "main.js": "/led_spectrum_remote/static/js/main.6a4c49f4.chunk.js",
-    "main.js.map": "/led_spectrum_remote/static/js/main.6a4c49f4.chunk.js.map",
+    "main.js": "/led_spectrum_remote/static/js/main.b8a10643.chunk.js",
+    "main.js.map": "/led_spectrum_remote/static/js/main.b8a10643.chunk.js.map",
     "runtime-main.js": "/led_spectrum_remote/static/js/runtime-main.ece4b47a.js",
     "runtime-main.js.map": "/led_spectrum_remote/static/js/runtime-main.ece4b47a.js.map",
     "static/js/2.8dfa8fd6.chunk.js": "/led_spectrum_remote/static/js/2.8dfa8fd6.chunk.js",
     "static/js/2.8dfa8fd6.chunk.js.map": "/led_spectrum_remote/static/js/2.8dfa8fd6.chunk.js.map",
     "index.html": "/led_spectrum_remote/index.html",
-    "precache-manifest.358520323fac6a525ae2dd9ff28eb043.js": "/led_spectrum_remote/precache-manifest.358520323fac6a525ae2dd9ff28eb043.js",
+    "precache-manifest.1e96b200b4679cad65933dd430b3289d.js": "/led_spectrum_remote/precache-manifest.1e96b200b4679cad65933dd430b3289d.js",
     "service-worker.js": "/led_spectrum_remote/service-worker.js",
     "static/css/main.a304bbed.chunk.css.map": "/led_spectrum_remote/static/css/main.a304bbed.chunk.css.map",
     "static/js/2.8dfa8fd6.chunk.js.LICENSE": "/led_spectrum_remote/static/js/2.8dfa8fd6.chunk.js.LICENSE"
@@ -17,6 +17,6 @@
     "static/js/runtime-main.ece4b47a.js",
     "static/js/2.8dfa8fd6.chunk.js",
     "static/css/main.a304bbed.chunk.css",
-    "static/js/main.6a4c49f4.chunk.js"
+    "static/js/main.b8a10643.chunk.js"
   ]
 }
