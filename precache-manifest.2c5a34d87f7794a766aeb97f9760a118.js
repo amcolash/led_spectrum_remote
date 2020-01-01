@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "074427956a83ce419d0c347abc3c8f7b",
+    "revision": "5195ae04c0af0364174ce415bb1cac92",
     "url": "/led_spectrum_remote/index.html"
   },
   {
-    "revision": "8b2271c052ed1d584819",
+    "revision": "d9d3b72864e84fbd299e",
     "url": "/led_spectrum_remote/static/css/main.a304bbed.chunk.css"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/led_spectrum_remote/static/js/2.8dfa8fd6.chunk.js.LICENSE"
   },
   {
-    "revision": "8b2271c052ed1d584819",
-    "url": "/led_spectrum_remote/static/js/main.b8a10643.chunk.js"
+    "revision": "d9d3b72864e84fbd299e",
+    "url": "/led_spectrum_remote/static/js/main.716b40d7.chunk.js"
   },
   {
     "revision": "0c092fa7b7a4e85856f3",
