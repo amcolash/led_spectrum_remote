@@ -36,10 +36,7 @@ export class App extends Component {
   getServerColors(preset) {
     axios
       .get(serverUrl)
-      .then(response => {
-        const data = response.data;
-        this.setState({ loading: false, setting: false, preset: preset || '', ...data });
-      })
+      .then(response => this.setState({ loading: false, setting: false, preset: preset || '', ...response.data }))
       .catch(err => {
         console.error(err);
         this.setState({ error: err });
@@ -50,7 +47,7 @@ export class App extends Component {
     this.setState({ setting: true, preset: preset || '' }, () => {
       axios
         .post(serverUrl + '?data=' + JSON.stringify(data))
-        .then(() => this.getServerColors(preset))
+        .then(response => this.setState({ loading: false, setting: false, preset: preset || '', ...response.data }))
         .catch(err => {
           console.error(err);
         });
@@ -186,7 +183,11 @@ export class App extends Component {
                 <button onClick={() => this.saveColorPreset(true)}>Save</button>
                 <button
                   onClick={() => {
-                    this.setState({ setting: true }, () => axios.post(serverUrl + '?reset').then(() => this.getServerColors()));
+                    this.setState({ setting: true }, () =>
+                      axios
+                        .post(serverUrl + '?reset')
+                        .then(response => this.setState({ loading: false, setting: false, preset: '', ...response.data }))
+                    );
                   }}
                 >
                   Reset
