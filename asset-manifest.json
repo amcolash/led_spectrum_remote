@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "/led_spectrum_remote/static/css/main.1b200c62.chunk.css",
+    "main.css": "/led_spectrum_remote/static/css/main.1ad64f11.chunk.css",
     "main.js": "/led_spectrum_remote/static/js/main.982d9141.chunk.js",
     "main.js.map": "/led_spectrum_remote/static/js/main.982d9141.chunk.js.map",
     "runtime-main.js": "/led_spectrum_remote/static/js/runtime-main.ece4b47a.js",
@@ -8,15 +8,15 @@
     "static/js/2.e84626a2.chunk.js": "/led_spectrum_remote/static/js/2.e84626a2.chunk.js",
     "static/js/2.e84626a2.chunk.js.map": "/led_spectrum_remote/static/js/2.e84626a2.chunk.js.map",
     "index.html": "/led_spectrum_remote/index.html",
-    "precache-manifest.907aee1c5f7af0d53cee5fd396f80501.js": "/led_spectrum_remote/precache-manifest.907aee1c5f7af0d53cee5fd396f80501.js",
+    "precache-manifest.2cc0afaeaf85d1100d439a909adc523d.js": "/led_spectrum_remote/precache-manifest.2cc0afaeaf85d1100d439a909adc523d.js",
     "service-worker.js": "/led_spectrum_remote/service-worker.js",
-    "static/css/main.1b200c62.chunk.css.map": "/led_spectrum_remote/static/css/main.1b200c62.chunk.css.map",
+    "static/css/main.1ad64f11.chunk.css.map": "/led_spectrum_remote/static/css/main.1ad64f11.chunk.css.map",
     "static/js/2.e84626a2.chunk.js.LICENSE": "/led_spectrum_remote/static/js/2.e84626a2.chunk.js.LICENSE"
   },
   "entrypoints": [
     "static/js/runtime-main.ece4b47a.js",
     "static/js/2.e84626a2.chunk.js",
-    "static/css/main.1b200c62.chunk.css",
+    "static/css/main.1ad64f11.chunk.css",
     "static/js/main.982d9141.chunk.js"
   ]
 }
