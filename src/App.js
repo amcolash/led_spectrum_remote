@@ -138,7 +138,10 @@ export class App extends Component {
         {error ? (
           <h1>{error.message}</h1>
         ) : loading ? (
-          <h1>Loading...</h1>
+          <Fragment>
+            <h1>Loading...</h1>
+            <Spinner visible={true} />
+          </Fragment>
         ) : (
           <Fragment>
             <div
