@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/led_spectrum_remote/precache-manifest.14f9024eb5c6435018541e30f54bb2d5.js"
+  "/led_spectrum_remote/precache-manifest.907aee1c5f7af0d53cee5fd396f80501.js"
 );
 
 self.addEventListener('message', (event) => {
