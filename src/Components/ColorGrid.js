@@ -6,11 +6,15 @@ import './ColorGrid.css';
 export class ColorGrid extends Component {
   constructor(props) {
     super(props);
-    this.state = { saturation: 255 };
+    this.state = { saturation: 255, syncSaturation: true };
   }
 
-  componentDidUpdate(prevProps) {
-    if (this.props.saturation !== prevProps.saturation) {
+  componentDidUpdate(prevProps, prevState) {
+    // A bit messy, but the saturation state should be updated when in the "synchronized mode" and when it gets turned on
+    if (
+      (this.props.saturation !== prevProps.saturation && this.state.syncSaturation) ||
+      (!prevState.syncSaturation && this.state.syncSaturation)
+    ) {
       this.setState({ saturation: this.props.saturation });
     }
   }
@@ -67,22 +71,41 @@ export class ColorGrid extends Component {
           {items}
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', paddingTop: margin * 2 }}>
-          <label style={{ paddingRight: 5 }}>Saturation</label>
-          <input
-            type="range"
-            min="0"
-            max="255"
-            value={this.state.saturation}
-            onClick={e => {
-              this.setState({ saturation: e.target.value });
-              e.stopPropagation();
-            }}
-            onChange={e => {
-              this.setState({ saturation: e.target.value });
-              e.stopPropagation();
-            }}
-          />
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', paddingTop: 16 }}>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <label style={{ paddingRight: 4 }}>Saturation</label>
+            <input
+              type="range"
+              min="0"
+              max="255"
+              value={this.state.saturation}
+              onClick={e => {
+                this.setState({ saturation: e.target.value });
+                e.stopPropagation();
+              }}
+              onChange={e => {
+                this.setState({ saturation: e.target.value });
+                e.stopPropagation();
+              }}
+            />
+            <span style={{ paddingLeft: 8 }}>{this.state.saturation}</span>
+          </div>
+
+          <div style={{ display: 'flex' }}>
+            <input
+              type="checkbox"
+              checked={this.state.syncSaturation}
+              onClick={e => {
+                this.setState({ syncSaturation: !this.state.syncSaturation });
+                e.stopPropagation();
+              }}
+              onChange={e => {
+                this.setState({ syncSaturation: !this.state.syncSaturation });
+                e.stopPropagation();
+              }}
+            />
+            <label>Sync Saturation</label>
+          </div>
         </div>
       </div>
     );
