@@ -1,7 +1,11 @@
 body {
-  background-color: #333;
-  color: white;
   user-select: none;
+  background-color: #333;
+}
+
+.app {
+  color: white;
+  background-color: #333;
 }
 
 button,
