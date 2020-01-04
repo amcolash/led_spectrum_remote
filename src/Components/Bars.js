@@ -25,7 +25,8 @@ export class Bars extends Component {
             height: this.state.heights[i],
             margin: 2,
             backgroundColor: rgbFromHsv(this.props.barHues[i], this.props.barSaturation[i], 255),
-            outline: this.props.selected === i ? '1px solid white' : undefined
+            outline: this.props.selected === i ? '1px solid white' : undefined,
+            cursor: 'pointer'
           }}
           key={i}
           onClick={e => {

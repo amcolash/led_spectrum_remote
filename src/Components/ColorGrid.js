@@ -20,7 +20,7 @@ export class ColorGrid extends Component {
   }
 
   render() {
-    const { dimensions, size, margin, hue } = this.props;
+    const { dimensions, size, margin, hue, disabled } = this.props;
     const sizeSquared = dimensions * dimensions;
     const width = (size + margin * 2) * dimensions;
 
@@ -43,7 +43,10 @@ export class ColorGrid extends Component {
             justifyContent: 'center',
             alignItems: 'center',
             transition: 'all 0.2s',
-            outline: hue === h ? '1px solid white' : '1px solid transparent'
+            outline: hue === h ? '1px solid white' : '1px solid transparent',
+            pointerEvents: disabled ? 'none' : undefined,
+            filter: disabled ? 'grayscale(90%) blur(1px)' : undefined,
+            cursor: disabled ? undefined : 'pointer'
           }}
           key={i}
           onClick={e => {
@@ -60,7 +63,8 @@ export class ColorGrid extends Component {
       <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', width: width + margin * 2 }}>
         <div
           style={{
-            backgroundColor: 'black',
+            transition: 'all 0.2s',
+            backgroundColor: disabled ? '#2a2a2a' : 'black',
             display: 'flex',
             flexWrap: 'wrap',
             width,
@@ -93,6 +97,7 @@ export class ColorGrid extends Component {
 
           <div style={{ display: 'flex' }}>
             <input
+              id="saturationCheck"
               type="checkbox"
               checked={this.state.syncSaturation}
               onClick={e => {
@@ -104,7 +109,7 @@ export class ColorGrid extends Component {
                 e.stopPropagation();
               }}
             />
-            <label>Sync Saturation</label>
+            <label htmlFor="saturationCheck">Sync Saturation</label>
           </div>
         </div>
       </div>

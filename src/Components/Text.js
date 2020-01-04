@@ -30,7 +30,8 @@ export class Text extends Component {
           color: rgbFromHsv(this.props.textHue, this.props.textSaturation, 255),
           fontSize: 16,
           width: '100%',
-          outline: this.props.selected ? '1px solid white' : undefined
+          outline: this.props.selected ? '1px solid white' : undefined,
+          cursor: 'pointer'
         }}
         onClick={e => {
           this.props.onClick(e);

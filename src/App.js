@@ -187,7 +187,15 @@ export class App extends Component {
               />
             </div>
 
-            <ColorGrid dimensions={7} size={32} margin={2} hue={hue} saturation={saturation} onClick={(h, s) => this.updateColor(h, s)} />
+            <ColorGrid
+              dimensions={7}
+              size={32}
+              margin={2}
+              hue={hue}
+              saturation={saturation}
+              disabled={selected === -1}
+              onClick={(h, s) => this.updateColor(h, s)}
+            />
 
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: 20 }}>
               <div>
