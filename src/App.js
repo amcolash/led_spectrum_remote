@@ -222,6 +222,30 @@ export class App extends Component {
                   Reset
                 </button>
               </div>
+              <div>
+                <button
+                  onClick={() => {
+                    this.setState({ setting: true }, () =>
+                      axios
+                        .post(serverUrl + '?shift=-1')
+                        .then(response => this.setState({ loading: false, setting: false, tmpHue: null, preset: '', ...response.data }))
+                    );
+                  }}
+                >
+                  {'<<'}
+                </button>
+                <button
+                  onClick={() => {
+                    this.setState({ setting: true }, () =>
+                      axios
+                        .post(serverUrl + '?shift=1')
+                        .then(response => this.setState({ loading: false, setting: false, tmpHue: null, preset: '', ...response.data }))
+                    );
+                  }}
+                >
+                  {'>>'}
+                </button>
+              </div>
             </div>
           </Fragment>
         )}
