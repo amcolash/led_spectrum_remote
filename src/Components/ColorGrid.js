@@ -100,16 +100,15 @@ export class ColorGrid extends Component {
               id="saturationCheck"
               type="checkbox"
               checked={this.state.syncSaturation}
-              onClick={e => {
-                this.setState({ syncSaturation: !this.state.syncSaturation });
-                e.stopPropagation();
-              }}
+              onClick={e => e.stopPropagation()}
               onChange={e => {
                 this.setState({ syncSaturation: !this.state.syncSaturation });
                 e.stopPropagation();
               }}
             />
-            <label htmlFor="saturationCheck">Sync Saturation</label>
+            <label htmlFor="saturationCheck" onClick={e => e.stopPropagation()}>
+              Sync Saturation
+            </label>
           </div>
         </div>
       </div>
