@@ -1,6 +1,7 @@
 import React from 'react';
 import { Component, Fragment } from 'react';
 import axios from 'axios';
+import deepEqual from 'deep-equal';
 import './App.css';
 import Holdable from './Components/Holdable';
 import { Bars } from './Components/Bars';
@@ -40,7 +41,29 @@ export class App extends Component {
   getServerColors(preset) {
     axios
       .get(serverUrl)
-      .then(response => this.setState({ loading: false, setting: false, tmpHue: null, preset: preset || '', ...response.data }))
+      .then(response => {
+        // Check to see if there is a matching preset (that is possibly shifted around), and if so set the preset.
+        // This is mostly for initial load for a nicer ui experience.
+
+        let matched;
+        if (!preset) {
+          Object.keys(this.state.presets).forEach(name => {
+            for (let i = 0; i < 16; i++) {
+              // Make a copy of the preset to prevent changes to the state object
+              const p = JSON.parse(JSON.stringify(this.state.presets[name]));
+
+              // Rotate both arrays by i, based on: https://stackoverflow.com/questions/1985260
+              p.barHues.unshift.apply(p.barHues, p.barHues.splice(i, p.barHues.length));
+              p.barSaturation.unshift.apply(p.barSaturation, p.barSaturation.splice(i, p.barSaturation.length));
+
+              // Check if the server data matches a local preset, if so set it here
+              if (deepEqual(response.data, p)) matched = name;
+            }
+          });
+        }
+
+        this.setState({ loading: false, setting: false, tmpHue: null, preset: preset || matched || '', ...response.data });
+      })
       .catch(err => {
         console.error(err);
         this.setState({ error: err });
@@ -245,7 +268,7 @@ export class App extends Component {
                     this.setState({ setting: true }, () =>
                       axios
                         .post(serverUrl + '?shift=-1')
-                        .then(response => this.setState({ loading: false, setting: false, tmpHue: null, preset: '', ...response.data }))
+                        .then(response => this.setState({ loading: false, setting: false, tmpHue: null, ...response.data }))
                     );
                   }}
                 >
@@ -256,7 +279,7 @@ export class App extends Component {
                     this.setState({ setting: true }, () =>
                       axios
                         .post(serverUrl + '?shift=1')
-                        .then(response => this.setState({ loading: false, setting: false, tmpHue: null, preset: '', ...response.data }))
+                        .then(response => this.setState({ loading: false, setting: false, tmpHue: null, ...response.data }))
                     );
                   }}
                 >
