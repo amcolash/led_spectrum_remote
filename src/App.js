@@ -2,6 +2,7 @@ import React from 'react';
 import { Component, Fragment } from 'react';
 import axios from 'axios';
 import './App.css';
+import Holdable from './Components/Holdable';
 import { Bars } from './Components/Bars';
 import { ColorGrid } from './Components/ColorGrid';
 import { Spinner } from './Components/Spinner';
@@ -210,17 +211,33 @@ export class App extends Component {
                     ))}
                 </select>
                 <button onClick={() => this.saveColorPreset(true)}>Save</button>
-                <button
-                  onClick={() => {
+                <Holdable
+                  onClickComplete={() => {
                     this.setState({ setting: true }, () =>
                       axios
                         .post(serverUrl + '?reset')
                         .then(response => this.setState({ loading: false, setting: false, tmpHue: null, preset: '', ...response.data }))
                     );
                   }}
+                  onHoldComplete={() => {
+                    if (this.state.preset !== '') {
+                      const c = window.confirm(`Are you sure you want to delete ${this.state.preset}?`);
+                      if (c) {
+                        let presets = localStorage.getItem('presets');
+                        if (presets) presets = JSON.parse(presets);
+                        else presets = {};
+
+                        delete presets[this.state.preset];
+                        localStorage.setItem('presets', JSON.stringify(presets));
+
+                        this.setState({ presets, preset: '' });
+                      }
+                    }
+                  }}
+                  style={{ display: 'inline-block' }}
                 >
-                  Reset
-                </button>
+                  <button>Reset</button>
+                </Holdable>
               </div>
               <div>
                 <button
