@@ -9,7 +9,18 @@ import { ColorGrid } from './Components/ColorGrid';
 import { Spinner } from './Components/Spinner';
 import { Text } from './Components/Text';
 
-const serverUrl = 'https://home.amcolash.com:9000/spectrum/color';
+const serverUrl = 'https://home.amcolash.com:9000/spectrum';
+const colorUrl = `${serverUrl}/color`;
+const brightnessUrl = `${serverUrl}/brightness`;
+
+const brightnessLevels = {
+  auto: -1,
+  off: 1,
+  '25%': 64,
+  '50%': 128,
+  '75%': 192,
+  '100%': 255,
+};
 
 export class App extends Component {
   constructor(props) {
@@ -30,7 +41,8 @@ export class App extends Component {
       selected: -1,
       presets,
       preset: '',
-      tmpHue: null
+      tmpHue: null,
+      brightness: -1,
     };
   }
 
@@ -40,7 +52,7 @@ export class App extends Component {
 
   getServerColors(preset) {
     axios
-      .get(serverUrl)
+      .get(colorUrl)
       .then(response => {
         // Check to see if there is a matching preset (that is possibly shifted around), and if so set the preset.
         // This is mostly for initial load for a nicer ui experience.
@@ -62,7 +74,17 @@ export class App extends Component {
           });
         }
 
-        this.setState({ loading: false, setting: false, tmpHue: null, preset: preset || matched || '', ...response.data });
+        this.setState({ tmpHue: null, preset: preset || matched || '', ...response.data }, () => {
+          axios
+            .get(brightnessUrl)
+            .then(res => {
+              this.setState({ loading: false, brightness: Number.parseInt(res.data) });
+            })
+            .catch(err => {
+              console.error(err);
+              this.setState({ error: err });
+            });
+        });
       })
       .catch(err => {
         console.error(err);
@@ -73,7 +95,7 @@ export class App extends Component {
   setServerColors(data, preset) {
     this.setState({ setting: true, preset: preset || '' }, () => {
       axios
-        .post(serverUrl + '?data=' + JSON.stringify(data))
+        .post(colorUrl + '?data=' + JSON.stringify(data))
         .then(response => this.setState({ loading: false, setting: false, tmpHue: null, preset: preset || '', ...response.data }))
         .catch(err => {
           console.error(err);
@@ -127,8 +149,35 @@ export class App extends Component {
     });
   }
 
+  setBrightness(brightness) {
+    this.setState({ setting: true }, () => {
+      axios
+        .post(brightnessUrl + '?brightness=' + brightness)
+        .then(res => {
+          this.setState({ brightness: Number.parseInt(brightness), setting: false });
+        })
+        .catch(err => {
+          console.error(err);
+          this.setState({ setting: false });
+        });
+    });
+  }
+
   render() {
-    const { barHues, barSaturation, error, loading, selected, setting, tmpHue, textHue, textSaturation } = this.state;
+    const {
+      barHues,
+      barSaturation,
+      error,
+      loading,
+      selected,
+      setting,
+      tmpHue,
+      textHue,
+      textSaturation,
+      preset,
+      presets,
+      brightness,
+    } = this.state;
 
     let selectedText = 'Selected: ';
     let hue = -1;
@@ -155,10 +204,9 @@ export class App extends Component {
           alignContent: 'center',
           justifyContent: 'center',
           alignItems: 'center',
-          height: '100vh'
+          height: '100vh',
         }}
-        onClick={() => this.setState({ selected: -1, tmpHue: null })}
-      >
+        onClick={() => this.setState({ selected: -1, tmpHue: null })}>
         {error ? (
           <h1>{error.message}</h1>
         ) : loading ? (
@@ -178,9 +226,8 @@ export class App extends Component {
                 flexDirection: 'column',
                 padding: 3,
                 borderRadius: 3,
-                marginBottom: 20
-              }}
-            >
+                marginBottom: 20,
+              }}>
               <Text
                 textHue={textHue}
                 textSaturation={textSaturation}
@@ -195,9 +242,8 @@ export class App extends Component {
                   justifyContent: 'center',
                   flexGrow: 1,
                   position: 'relative',
-                  paddingBottom: 10
-                }}
-              >
+                  paddingBottom: 10,
+                }}>
                 <Spinner visible={setting} />
                 <div style={{ opacity: !setting && selected !== -1 ? 1 : 0, transition: 'all 0.35s', position: 'absolute' }}>
                   {selectedText}
@@ -221,11 +267,11 @@ export class App extends Component {
               onClick={(h, s) => this.updateColor(h, s)}
             />
 
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: 20 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', marginTop: 20 }}>
               <div>
                 <label>Presets</label>
-                <select onChange={e => this.loadColorPreset(e.target.value)} value={this.state.preset}>
-                  {['', ...Object.keys(this.state.presets)]
+                <select onChange={e => this.loadColorPreset(e.target.value)} value={preset}>
+                  {['', ...Object.keys(presets)]
                     .sort((a, b) => a.localeCompare(b))
                     .map(p => (
                       <option value={p} key={p}>
@@ -238,51 +284,56 @@ export class App extends Component {
                   onClickComplete={() => {
                     this.setState({ setting: true }, () =>
                       axios
-                        .post(serverUrl + '?reset')
+                        .post(colorUrl + '?reset')
                         .then(response => this.setState({ loading: false, setting: false, tmpHue: null, preset: '', ...response.data }))
                     );
                   }}
                   onHoldComplete={() => {
-                    if (this.state.preset !== '') {
-                      const c = window.confirm(`Are you sure you want to delete ${this.state.preset}?`);
+                    if (preset !== '') {
+                      const c = window.confirm(`Are you sure you want to delete ${preset}?`);
                       if (c) {
                         let presets = localStorage.getItem('presets');
                         if (presets) presets = JSON.parse(presets);
                         else presets = {};
 
-                        delete presets[this.state.preset];
+                        delete presets[preset];
                         localStorage.setItem('presets', JSON.stringify(presets));
 
                         this.setState({ presets, preset: '' });
                       }
                     }
                   }}
-                  style={{ display: 'inline-block' }}
-                >
+                  style={{ display: 'inline-block' }}>
                   <button>Reset</button>
                 </Holdable>
               </div>
               <div>
+                <label>Brightness</label>
+                <select onChange={e => this.setBrightness(e.target.value)} value={brightness}>
+                  {[...Object.keys(brightnessLevels)].map(b => (
+                    <option value={brightnessLevels[b]} key={b}>
+                      {b}
+                    </option>
+                  ))}
+                </select>
                 <button
                   onClick={() => {
                     this.setState({ setting: true }, () =>
                       axios
-                        .post(serverUrl + '?shift=-1')
+                        .post(colorUrl + '?shift=-1')
                         .then(response => this.setState({ loading: false, setting: false, tmpHue: null, ...response.data }))
                     );
-                  }}
-                >
+                  }}>
                   {'<<'}
                 </button>
                 <button
                   onClick={() => {
                     this.setState({ setting: true }, () =>
                       axios
-                        .post(serverUrl + '?shift=1')
+                        .post(colorUrl + '?shift=1')
                         .then(response => this.setState({ loading: false, setting: false, tmpHue: null, ...response.data }))
                     );
-                  }}
-                >
+                  }}>
                   {'>>'}
                 </button>
               </div>

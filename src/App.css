@@ -14,5 +14,6 @@ select {
   padding: 6px;
   background-color: #fafafa;
   border: none;
-  min-width: 73px;
+  min-width: 75px;
+  border-radius: 2px;
 }
