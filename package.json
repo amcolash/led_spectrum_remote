@@ -4,7 +4,7 @@
   "private": true,
   "homepage": "https://amcolash.github.io/led_spectrum_remote",
   "dependencies": {
-    "axios": "^0.21.1",
+    "axios": "^0.21.2",
     "deep-equal": "^2.0.1",
     "react": "^16.12.0",
     "react-dom": "^16.12.0"
